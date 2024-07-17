@@ -9,6 +9,7 @@ const validateToken = (req, res, next) => {
         // should not hardcode
 		const validToken = verify(accessToken, "importantsecret");
 		if (validToken) {
+			req.user = validToken;
 			return next();
 		}
 	} catch (error) {

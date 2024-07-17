@@ -1,12 +1,14 @@
 // @ts-nocheck
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../helpers/AuthContext";
 const Login = () => {
     const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
     const navigate = useNavigate();
+	const {setAuthState} = useContext(AuthContext);
 
 	const login = () => {
 		const data = { username: username, password: password };
@@ -15,7 +17,8 @@ const Login = () => {
 			if (resp.data.error) 
                 alert(resp.data.error);
             else {
-                sessionStorage.setItem("token", resp.data.accessToken);
+                localStorage.setItem("token", resp.data.accessToken);
+				setAuthState(true);
                 navigate("/");
             }
             

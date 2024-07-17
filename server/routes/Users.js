@@ -5,6 +5,7 @@ const router = express.Router();
 const { Users } = require("../models");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
 router.post("/register", async (req, res) => {
 	const { username, password } = req.body;
@@ -37,5 +38,9 @@ router.post("/login", async (req, res) => {
 		return res.json({ error: "User does not exist" });
 	}
 });
+
+router.get("/verifyauth", validateToken, async (req,res) => {
+	res.json(req.user);
+})
 
 module.exports = router;

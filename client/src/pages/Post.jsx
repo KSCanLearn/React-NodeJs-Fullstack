@@ -33,7 +33,7 @@ const Post = () => {
 				},
 				{
 					headers: {
-						accessToken: sessionStorage.getItem("token"),
+						accessToken: localStorage.getItem("token"),
 					},
 				}
 			)
@@ -81,6 +81,7 @@ const Post = () => {
 						return (
 							<div key={key} className="comment">
 								{comment.commentBody}
+								<label>By: {comment.username}</label>
 							</div>
 						);
 					})}

@@ -12,6 +12,8 @@ router.get("/byPostId/:postId", async (req, res) => {
 
 router.post("/new", validateToken, async (req, res) => {
 	const comment = req.body;
+	const username = req.user.username; // req.user is passed from AuthMiddleware.js
+	comment.username = username;
 	await Comments.create(comment);
 	res.json(comment);
 });
