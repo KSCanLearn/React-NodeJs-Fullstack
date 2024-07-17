@@ -12,7 +12,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function App() {
-	const [authState, setAuthState] = useState(false);
+	const initalAuthState = {
+		username: "",
+		id: 0,
+		status: false,
+	}
+	const [authState, setAuthState] = useState(initalAuthState);
 
 	useEffect(() => {
 		axios
@@ -22,14 +27,18 @@ function App() {
 				},
 			})
 			.then((res) => {
-				if (res.data.error) setAuthState(false);
-				else setAuthState(true);
+				if (res.data.error) setAuthState(initalAuthState);
+				else setAuthState({
+					username: res.data.username,
+					id: res.data.id,
+					status: true,
+				});
 			});
 	}, []);
 
 	function logout() {
 		localStorage.removeItem("token");
-		setAuthState(false);
+		setAuthState(initalAuthState);
 	}
 
 	return (
@@ -39,13 +48,16 @@ function App() {
 					<div className="navbar">
 						<Link to="/">Home Page</Link>
 						<Link to="/createpost"> Create A Post</Link>
-						{!authState ? (
+						{!authState.status ? (
 							<>
 								<Link to="/login"> Login</Link>
 								<Link to="/registration"> Register</Link>
 							</>
 						) : (
-							<button onClick={logout}>Logout</button>
+							<>
+								<button onClick={logout}>Logout</button>
+								<h1>{authState.username}</h1>
+							</>
 						)}
 					</div>
 					<Routes>

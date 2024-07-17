@@ -32,15 +32,20 @@ router.post("/login", async (req, res) => {
 				{ username: user.username, id: user.id },
 				"importantsecret" // Should not be hardcode
 			);
-			return res.json({ isLogin: true, accessToken: accessToken });
+			return res.json({
+				isLogin: true,
+				token: accessToken,
+				username: username,
+				id: user.id,
+			});
 		});
 	} else {
 		return res.json({ error: "User does not exist" });
 	}
 });
 
-router.get("/verifyauth", validateToken, async (req,res) => {
+router.get("/verifyauth", validateToken, async (req, res) => {
 	res.json(req.user);
-})
+});
 
 module.exports = router;
