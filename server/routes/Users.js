@@ -4,6 +4,7 @@ const express = require("express");
 const router = express.Router();
 const { Users } = require("../models");
 const bcrypt = require("bcrypt");
+const { sign } = require("jsonwebtoken");
 
 router.post("/register", async (req, res) => {
 	const { username, password } = req.body;
@@ -26,8 +27,11 @@ router.post("/login", async (req, res) => {
 			if (!same) {
 				return res.json({ error: "Wrong username or password" });
 			}
-
-			return res.json({ isLogin: true});
+			const accessToken = sign(
+				{ username: user.username, id: user.id },
+				"importantsecret" // Should not be hardcode
+			);
+			return res.json({ isLogin: true, accessToken: accessToken });
 		});
 	} else {
 		return res.json({ error: "User does not exist" });

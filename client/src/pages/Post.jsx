@@ -25,19 +25,31 @@ const Post = () => {
 
 	function addComment() {
 		axios
-			.post("http://localhost:3001/comments/new", {
-				commentBody: newComment,
-				PostId: id,
-			})
+			.post(
+				"http://localhost:3001/comments/new",
+				{
+					commentBody: newComment,
+					PostId: id,
+				},
+				{
+					headers: {
+						accessToken: sessionStorage.getItem("token"),
+					},
+				}
+			)
 			.then((resp) => {
+				if (resp.data.error) 
+					alert(resp.data.error)
 				// OP done like this:
 				// const commentToAdd = { commentBody: newComment };
 				// setComments([...comments, commentToAdd]);
-				
-				// For now redundant the code, later code refactor this to reuseable 
-				axios.get(`http://localhost:3001/comments/byPostId/${id}`).then((resp) => {
-					setComments(resp.data);
-				});
+
+				// For now redundant the code, later code refactor this to reuseable
+				axios
+					.get(`http://localhost:3001/comments/byPostId/${id}`)
+					.then((resp) => {
+						setComments(resp.data);
+					});
 				setNewComment("");
 			});
 	}
